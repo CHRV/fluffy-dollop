@@ -10,25 +10,17 @@ from jax import numpy as jnp
 from recommender.models import base
 
 
-class MatrixFactorisation(nn.Module):
+class MatrixFactorization(nn.Module):
     num_users: int
     num_items: int
     features: int
 
     def setup(self):
-        self.user_embed = nn.linear.Embed(
-            self.num_users, self.features, scope="user", name="embedding"
-        )
-        self.user_bias_embed = nn.linear.Embed(
-            self.num_users, 1, scope="user", name="bias"
-        )
+        self.user_embed = nn.linear.Embed(self.num_users, self.features)
+        self.user_bias_embed = nn.linear.Embed(self.num_users, 1)
 
-        self.item_embed = nn.linear.Embed(
-            self.num_items, self.features, scope="item", name="embedding"
-        )
-        self.item_bias_embed = nn.linear.Embed(
-            self.num_items, 1, scope="item", name="bias"
-        )
+        self.item_embed = nn.linear.Embed(self.num_items, self.features)
+        self.item_bias_embed = nn.linear.Embed(self.num_items, 1)
 
     def __call__(self, inputs):
         user_batch = inputs["user_ids"]
@@ -49,14 +41,14 @@ class MatrixFactorisation(nn.Module):
         )
 
 
-class MatrixFactorisationModel(base.Model):
-    model: nn.Module
+class MatrixFactorizationModel(base.Model):
+    model: MatrixFactorization
     state: TrainState
     loss_fn: Callable[[Any, Any], float]
 
     def __init__(
         self,
-        model: nn.Module,
+        model: MatrixFactorization,
         params: VariableDict,
         loss_fn: Callable,
         optim=optax.adam(1e-2),
