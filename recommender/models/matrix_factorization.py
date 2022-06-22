@@ -2,6 +2,7 @@ from typing import Any, Callable
 
 import einops
 import flax.linen as nn
+from matplotlib.pyplot import axis
 import optax
 from flax.core.scope import VariableDict
 from flax.training.train_state import TrainState
@@ -33,12 +34,10 @@ class MatrixFactorization(nn.Module):
 
         item_embedding = self.item_embed(item_batch)
         item_bias = self.item_bias_embed(item_batch)
+        ratings_logits = jnp.sum(user_embedding * item_embedding, axis=1)
+        ratings_logits = ratings_logits + jnp.squeeze(user_bias + item_bias)
 
-        return (
-            einops.reduce(user_embedding * item_embedding, "b r-> b", "sum")
-            + user_bias
-            + item_bias,
-        )
+        return jax.nn.sigmoid(ratings_logits)
 
 
 class MatrixFactorizationModel(base.Model):
