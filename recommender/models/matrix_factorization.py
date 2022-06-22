@@ -58,7 +58,7 @@ class MatrixFactorizationModel(base.Model):
 
     def compute_loss(self, inputs, targets, training: bool = False):
         def loss(params):
-            out = self.state.apply_fn({"params": params}, inputs)
+            out = self.state.apply_fn(params, inputs)
             return self.loss_fn(targets, out)
 
         if training:
