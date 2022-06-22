@@ -35,9 +35,9 @@ class MatrixFactorization(nn.Module):
         item_bias = self.item_bias_embed(item_batch)
 
         return (
-            einops.reduce("b r-> r", user_embedding * item_embedding)
-            + user_bias
-            + item_bias
+            einops.reduce(user_embedding * item_embedding) + user_bias + item_bias,
+            "b r-> r",
+            "sum",
         )
 
 
