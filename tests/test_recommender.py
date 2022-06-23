@@ -38,7 +38,7 @@ def test_mf_model():
     params = mf.init(jax.random.PRNGKey(0), inputs)
 
     model = MatrixFactorizationModel(
-        mf, params, lambda x, y: jax.numpy.sum((x - y) ** 2), tx
+        mf, params, lambda x, y: jax.numpy.sum((x - y) ** 2), optax.adam(1e-3)
     )
 
     for _ in range(5):

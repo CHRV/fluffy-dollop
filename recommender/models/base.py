@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from functools import partial
+
+import jax
 
 
 class Model(ABC):
@@ -14,6 +17,7 @@ class Model(ABC):
         """
         pass
 
+    @partial(jax.jit, static_argnames=["self"])
     def train_step(self, inputs, targets):
         """Custom train step using the `compute_loss` method."""
 
